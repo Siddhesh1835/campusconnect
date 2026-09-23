@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Campus Connect — Schedule MCQ tests for your students." />
+  <meta name="theme-color" content="#1a1a1b" />
+  <title>Campus Connect — Schedule Test</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============== HEADER ============== -->
+  <header class="header">
+    <a href="home.html" class="header-logo">
+      <div class="header-logo-icon">🎓</div>
+      <span class="header-logo-text">Campus Connect</span>
+    </a>
+    <div class="header-search">
+      <svg class="header-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="header-search-input" placeholder="Search Campus Connect" />
+    </div>
+    <div class="header-actions">
+      <div class="user-menu" id="userMenu">
+        <button class="user-menu-trigger" id="userMenuTrigger">
+          <div class="user-avatar">👤</div>
+          <span class="user-menu-name" id="userName">User</span>
+          <svg class="user-menu-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <button class="user-dropdown-item" onclick="window.location.href='home.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </button>
+          <button class="user-dropdown-item" id="viewProfile" onclick="window.location.href='profile.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            View Profile
+          </button>
+          <button class="user-dropdown-item" onclick="window.location.href='dashboard.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Dashboard
+          </button>
+          <div class="user-dropdown-divider"></div>
+          <button class="user-dropdown-item" id="logoutBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============== SCHEDULE TEST ============== -->
+  <div class="post-detail-layout">
+    <a href="test.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to tests
+    </a>
+
+    <div class="test-container">
+      <h1 class="create-post-title mb-xl">🧑‍🏫 Schedule MCQ Test</h1>
+
+      <div id="accessDenied" class="hidden">
+        <div class="empty-state">
+          <div class="empty-state-title">Access Denied</div>
+          <p class="empty-state-text">Only teachers can schedule tests.</p>
+          <a href="home.html" class="btn btn-primary mt-lg">Go Home</a>
+        </div>
+      </div>
+
+      <div id="scheduleForm">
+        <div class="schedule-form">
+          <!-- Test Info -->
+          <div class="form-group">
+            <label class="form-label" for="testTitle">Test Title</label>
+            <input type="text" class="form-input" id="testTitle" placeholder="e.g., Module 3 — Data Structures Quiz" maxlength="200" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="testDescription">Description <span class="text-muted">(optional)</span></label>
+            <textarea class="form-textarea" id="testDescription" placeholder="Instructions or notes for students..." rows="3"></textarea>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg);">
+            <div class="form-group">
+              <label class="form-label" for="testCommunity">Target Community</label>
+              <select class="form-select" id="testCommunity" required>
+                <option value="">Select community...</option>
+              </select>
+              <span class="form-hint">Only students in this group will see the test</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="testDuration">Duration (minutes)</label>
+              <input type="number" class="form-input" id="testDuration" value="30" min="5" max="180" />
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg);">
+            <div class="form-group">
+              <label class="form-label" for="testSchedule">Schedule At <span class="text-muted">(optional)</span></label>
+              <input type="datetime-local" class="form-input" id="testSchedule" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="testDeadline">Deadline <span class="text-muted">(optional)</span></label>
+              <input type="datetime-local" class="form-input" id="testDeadline" />
+            </div>
+          </div>
+
+          <!-- Questions -->
+          <div class="sidebar-divider mb-xl"></div>
+          <h2 style="font-size:1.08rem;font-weight:700;color:var(--text-heading);margin-bottom:var(--space-xl);">Questions</h2>
+
+          <div id="questionsBuilder">
+            <!-- Question 1 (default) -->
+            <div class="question-builder" data-question-index="0">
+              <div class="question-builder-header">
+                <span class="question-builder-num">Question 1</span>
+                <button class="question-builder-remove" onclick="removeQuestion(this)" title="Remove question">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-input question-text-input" placeholder="Enter question text..." maxlength="500" />
+              </div>
+              <div class="form-group">
+                <div class="poll-option-input">
+                  <label class="correct-option-label">
+                    <input type="radio" name="correct-0" value="0" checked />
+                  </label>
+                  <input type="text" class="option-input" placeholder="Option A" maxlength="200" />
+                </div>
+                <div class="poll-option-input">
+                  <label class="correct-option-label">
+                    <input type="radio" name="correct-0" value="1" />
+                  </label>
+                  <input type="text" class="option-input" placeholder="Option B" maxlength="200" />
+                </div>
+                <div class="poll-option-input">
+                  <label class="correct-option-label">
+                    <input type="radio" name="correct-0" value="2" />
+                  </label>
+                  <input type="text" class="option-input" placeholder="Option C" maxlength="200" />
+                </div>
+                <div class="poll-option-input">
+                  <label class="correct-option-label">
+                    <input type="radio" name="correct-0" value="3" />
+                  </label>
+                  <input type="text" class="option-input" placeholder="Option D" maxlength="200" />
+                </div>
+                <span class="form-hint">🟢 Select the radio button next to the correct answer</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="add-option-btn mt-md mb-xl" onclick="addQuestion()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Question
+          </button>
+
+          <div class="sidebar-divider mb-xl"></div>
+
+          <button class="btn btn-primary btn-lg btn-block" onclick="submitTest()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+            Publish Test
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    let currentUser = null;
+    let questionCount = 1;
+
+    async function initSchedulePage() {
+      const session = await Auth.requireAuth();
+      if (!session) return;
+
+      currentUser = await Auth.getProfile();
+      if (currentUser) {
+        document.getElementById('userName').textContent = currentUser.full_name;
+      }
+
+      setupUserMenu();
+
+      // Check teacher role
+      if (currentUser.role !== 'teacher' && currentUser.role !== 'admin') {
+        document.getElementById('scheduleForm').classList.add('hidden');
+        document.getElementById('accessDenied').classList.remove('hidden');
+        return;
+      }
+
+      await loadTeacherCommunities();
+    }
+
+    // Load communities where user is a teacher
+    async function loadTeacherCommunities() {
+      const communities = await Auth.getTeacherCommunities();
+      const select = document.getElementById('testCommunity');
+
+      if (communities.length === 0) {
+        const opt = document.createElement('option');
+        opt.textContent = 'No communities (contact admin)';
+        opt.disabled = true;
+        select.appendChild(opt);
+        return;
+      }
+
+      communities.forEach(cm => {
+        const opt = document.createElement('option');
+        opt.value = cm.communities.id;
+        opt.textContent = `${cm.communities.icon_emoji} ${cm.communities.name}`;
+        select.appendChild(opt);
+      });
+    }
+
+    // Add question
+    function addQuestion() {
+      const container = document.getElementById('questionsBuilder');
+      const qIndex = questionCount;
+      questionCount++;
+
+      const div = document.createElement('div');
+      div.className = 'question-builder';
+      div.dataset.questionIndex = qIndex;
+      div.innerHTML = `
+        <div class="question-builder-header">
+          <span class="question-builder-num">Question ${qIndex + 1}</span>
+          <button class="question-builder-remove" onclick="removeQuestion(this)" title="Remove question">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-input question-text-input" placeholder="Enter question text..." maxlength="500" />
+        </div>
+        <div class="form-group">
+          <div class="poll-option-input">
+            <label class="correct-option-label">
+              <input type="radio" name="correct-${qIndex}" value="0" checked />
+            </label>
+            <input type="text" class="option-input" placeholder="Option A" maxlength="200" />
+          </div>
+          <div class="poll-option-input">
+            <label class="correct-option-label">
+              <input type="radio" name="correct-${qIndex}" value="1" />
+            </label>
+            <input type="text" class="option-input" placeholder="Option B" maxlength="200" />
+          </div>
+          <div class="poll-option-input">
+            <label class="correct-option-label">
+              <input type="radio" name="correct-${qIndex}" value="2" />
+            </label>
+            <input type="text" class="option-input" placeholder="Option C" maxlength="200" />
+          </div>
+          <div class="poll-option-input">
+            <label class="correct-option-label">
+              <input type="radio" name="correct-${qIndex}" value="3" />
+            </label>
+            <input type="text" class="option-input" placeholder="Option D" maxlength="200" />
+          </div>
+          <span class="form-hint">🟢 Select the radio button next to the correct answer</span>
+        </div>
+      `;
+
+      container.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Remove question
+    function removeQuestion(btn) {
+      const container = document.getElementById('questionsBuilder');
+      if (container.children.length <= 1) {
+        showToast('At least 1 question required', 'error');
+        return;
+      }
+      btn.closest('.question-builder').remove();
+      renumberQuestions();
+    }
+
+    // Renumber questions
+    function renumberQuestions() {
+      document.querySelectorAll('.question-builder').forEach((qb, i) => {
+        qb.querySelector('.question-builder-num').textContent = `Question ${i + 1}`;
+      });
+    }
+
+    // Submit test
+    async function submitTest() {
+      const title = document.getElementById('testTitle').value.trim();
+      const description = document.getElementById('testDescription').value.trim();
+      const communityId = document.getElementById('testCommunity').value;
+      const duration = parseInt(document.getElementById('testDuration').value) || 30;
+      const scheduleAt = document.getElementById('testSchedule').value;
+      const deadlineAt = document.getElementById('testDeadline').value;
+
+      if (!title) { showToast('Please enter a test title', 'error'); return; }
+      if (!communityId) { showToast('Please select a target community', 'error'); return; }
+
+      // Collect questions
+      const questionBuilders = document.querySelectorAll('.question-builder');
+      const questions = [];
+
+      for (let i = 0; i < questionBuilders.length; i++) {
+        const qb = questionBuilders[i];
+        const questionText = qb.querySelector('.question-text-input').value.trim();
+        if (!questionText) {
+          showToast(`Question ${i + 1} text is empty`, 'error');
+          return;
+        }
+
+        const optionInputs = qb.querySelectorAll('.option-input');
+        const options = [];
+        for (let j = 0; j < optionInputs.length; j++) {
+          const text = optionInputs[j].value.trim();
+          if (!text) {
+            showToast(`Question ${i + 1}, Option ${String.fromCharCode(65 + j)} is empty`, 'error');
+            return;
+          }
+          options.push(text);
+        }
+
+        const correctRadio = qb.querySelector(`input[type="radio"]:checked`);
+        const correctIndex = parseInt(correctRadio?.value || '0');
+
+        questions.push({
+          question_text: questionText,
+          question_index: i,
+          options: options,
+          correct_index: correctIndex
+        });
+      }
+
+      if (questions.length === 0) {
+        showToast('Add at least one question', 'error');
+        return;
+      }
+
+      // Create test
+      const testData = {
+        community_id: communityId,
+        created_by: currentUser.id,
+        title: title,
+        description: description,
+        duration_minutes: duration,
+        is_active: true
+      };
+
+      if (scheduleAt) testData.scheduled_at = new Date(scheduleAt).toISOString();
+      if (deadlineAt) testData.deadline_at = new Date(deadlineAt).toISOString();
+
+      const { data: test, error: testErr } = await supabase
+        .from('mcq_tests')
+        .insert(testData)
+        .select()
+        .single();
+
+      if (testErr) {
+        showToast('Failed to create test: ' + testErr.message, 'error');
+        return;
+      }
+
+      // Create questions and options
+      for (const q of questions) {
+        const { data: question, error: qErr } = await supabase
+          .from('mcq_questions')
+          .insert({
+            test_id: test.id,
+            question_text: q.question_text,
+            question_index: q.question_index
+          })
+          .select()
+          .single();
+
+        if (qErr) {
+          showToast('Failed to add question: ' + qErr.message, 'error');
+          continue;
+        }
+
+        // Add options
+        const optionRows = q.options.map((text, j) => ({
+          question_id: question.id,
+          option_text: text,
+          is_correct: j === q.correct_index,
+          option_index: j
+        }));
+
+        await supabase.from('mcq_options').insert(optionRows);
+      }
+
+      showToast('Test published successfully! 🎉', 'success');
+      setTimeout(() => { window.location.href = 'test.html'; }, 1000);
+    }
+
+    // Utilities
+    function setupUserMenu() {
+      const trigger = document.getElementById('userMenuTrigger');
+      const dropdown = document.getElementById('userDropdown');
+      const menu = document.getElementById('userMenu');
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+        menu.classList.toggle('open');
+      });
+      document.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        menu.classList.remove('open');
+      });
+      document.getElementById('logoutBtn').addEventListener('click', () => Auth.logout());
+    }
+
+    function showToast(message, type = '') {
+      let toast = document.querySelector('.toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.className = `toast ${type}`;
+      void toast.offsetWidth;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    document.addEventListener('DOMContentLoaded', initSchedulePage);
+  </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Campus Connect — Create a new post or poll for your community." />
+  <meta name="theme-color" content="#1a1a1b" />
+  <title>Campus Connect — Create Post</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============== HEADER ============== -->
+  <header class="header">
+    <a href="home.html" class="header-logo">
+      <div class="header-logo-icon">🎓</div>
+      <span class="header-logo-text">Campus Connect</span>
+    </a>
+    <div class="header-search">
+      <svg class="header-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="header-search-input" placeholder="Search Campus Connect" />
+    </div>
+    <div class="header-actions">
+      <div class="user-menu" id="userMenu">
+        <button class="user-menu-trigger" id="userMenuTrigger">
+          <div class="user-avatar">👤</div>
+          <span class="user-menu-name" id="userName">User</span>
+          <svg class="user-menu-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <button class="user-dropdown-item" onclick="window.location.href='home.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </button>
+          <button class="user-dropdown-item" id="viewProfile" onclick="window.location.href='profile.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            View Profile
+          </button>
+          <button class="user-dropdown-item" onclick="window.location.href='dashboard.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Dashboard
+          </button>
+          <div class="user-dropdown-divider"></div>
+          <button class="user-dropdown-item" id="logoutBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============== CREATE POST ============== -->
+  <div class="post-detail-layout">
+    <a href="home.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to feed
+    </a>
+
+    <div class="create-post-container">
+      <div class="create-post-header">
+        <h1 class="create-post-title">Create a Post</h1>
+      </div>
+
+      <!-- Community Selector -->
+      <div class="form-group">
+        <label class="form-label" for="communitySelect">Choose a community</label>
+        <select class="form-select" id="communitySelect" required>
+          <option value="">Select a community...</option>
+        </select>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="tab-switcher">
+        <button class="tab-btn active" data-tab="text" id="tabText">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Text
+        </button>
+        <button class="tab-btn" data-tab="poll" id="tabPoll">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Poll
+        </button>
+      </div>
+
+      <!-- Text Post Tab -->
+      <div class="tab-content active" id="tabContentText">
+        <div class="form-group">
+          <label class="form-label" for="postTitle">Title</label>
+          <input type="text" class="form-input" id="postTitle" placeholder="Enter a descriptive title" maxlength="300" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="postContent">Body <span class="text-muted">(optional)</span></label>
+          <textarea class="form-textarea" id="postContent" placeholder="Write your post content here..." rows="8"></textarea>
+        </div>
+        <button class="btn btn-primary btn-lg" id="submitTextPost" onclick="submitTextPost()">Post</button>
+      </div>
+
+      <!-- Poll Tab -->
+      <div class="tab-content" id="tabContentPoll">
+        <div class="form-group">
+          <label class="form-label" for="pollTitle">Poll Question / Title</label>
+          <input type="text" class="form-input" id="pollTitle" placeholder="What's your poll about?" maxlength="300" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Options</label>
+          <div id="pollOptionsContainer">
+            <div class="poll-option-input">
+              <input type="text" placeholder="Option 1" maxlength="200" class="poll-opt-input" />
+              <button class="poll-option-remove" onclick="removePollOption(this)" title="Remove option">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div class="poll-option-input">
+              <input type="text" placeholder="Option 2" maxlength="200" class="poll-opt-input" />
+              <button class="poll-option-remove" onclick="removePollOption(this)" title="Remove option">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+          <button class="add-option-btn mt-sm" onclick="addPollOption()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Option
+          </button>
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="submitPollPost()">Post Poll</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    let currentUser = null;
+
+    async function initCreatePage() {
+      const session = await Auth.requireAuth();
+      if (!session) return;
+
+      currentUser = await Auth.getProfile();
+      if (currentUser) {
+        document.getElementById('userName').textContent = currentUser.full_name;
+      }
+
+      setupUserMenu();
+      setupTabs();
+      await loadCommunities();
+    }
+
+    // Load user's communities
+    async function loadCommunities() {
+      const communities = await Auth.getJoinedCommunities();
+      const select = document.getElementById('communitySelect');
+      communities.forEach(cm => {
+        const opt = document.createElement('option');
+        opt.value = cm.communities.id;
+        opt.textContent = `${cm.communities.icon_emoji} ${cm.communities.name}`;
+        select.appendChild(opt);
+      });
+    }
+
+    // Tab switching
+    function setupTabs() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(`tabContent${capitalize(btn.dataset.tab)}`).classList.add('active');
+        });
+      });
+    }
+
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    // Add poll option
+    function addPollOption() {
+      const container = document.getElementById('pollOptionsContainer');
+      const count = container.children.length;
+      if (count >= 6) {
+        showToast('Maximum 6 options allowed', 'error');
+        return;
+      }
+      const div = document.createElement('div');
+      div.className = 'poll-option-input';
+      div.innerHTML = `
+        <input type="text" placeholder="Option ${count + 1}" maxlength="200" class="poll-opt-input" />
+        <button class="poll-option-remove" onclick="removePollOption(this)" title="Remove option">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      `;
+      container.appendChild(div);
+    }
+
+    // Remove poll option
+    function removePollOption(btn) {
+      const container = document.getElementById('pollOptionsContainer');
+      if (container.children.length <= 2) {
+        showToast('Minimum 2 options required', 'error');
+        return;
+      }
+      btn.closest('.poll-option-input').remove();
+    }
+
+    // Submit text post
+    async function submitTextPost() {
+      const communityId = document.getElementById('communitySelect').value;
+      const title = document.getElementById('postTitle').value.trim();
+      const content = document.getElementById('postContent').value.trim();
+
+      if (!communityId) { showToast('Please select a community', 'error'); return; }
+      if (!title) { showToast('Please enter a title', 'error'); return; }
+
+      const { data, error } = await supabase.from('posts').insert({
+        community_id: communityId,
+        author_id: currentUser.id,
+        title: title,
+        content: content,
+        type: 'text'
+      }).select().single();
+
+      if (error) {
+        showToast('Failed to create post: ' + error.message, 'error');
+        return;
+      }
+
+      showToast('Post created!', 'success');
+      setTimeout(() => { window.location.href = `post.html?id=${data.id}`; }, 500);
+    }
+
+    // Submit poll post
+    async function submitPollPost() {
+      const communityId = document.getElementById('communitySelect').value;
+      const title = document.getElementById('pollTitle').value.trim();
+      const optInputs = document.querySelectorAll('.poll-opt-input');
+      const options = Array.from(optInputs).map(i => i.value.trim()).filter(v => v);
+
+      if (!communityId) { showToast('Please select a community', 'error'); return; }
+      if (!title) { showToast('Please enter a poll question', 'error'); return; }
+      if (options.length < 2) { showToast('At least 2 options required', 'error'); return; }
+
+      // Create post
+      const { data: post, error: postErr } = await supabase.from('posts').insert({
+        community_id: communityId,
+        author_id: currentUser.id,
+        title: title,
+        content: '',
+        type: 'poll'
+      }).select().single();
+
+      if (postErr) {
+        showToast('Failed to create poll: ' + postErr.message, 'error');
+        return;
+      }
+
+      // Create options
+      const optionRows = options.map((text, i) => ({
+        post_id: post.id,
+        option_text: text,
+        option_index: i
+      }));
+
+      const { error: optErr } = await supabase.from('poll_options').insert(optionRows);
+
+      if (optErr) {
+        showToast('Poll created but options failed: ' + optErr.message, 'error');
+        return;
+      }
+
+      showToast('Poll created!', 'success');
+      setTimeout(() => { window.location.href = `post.html?id=${post.id}`; }, 500);
+    }
+
+    // User menu
+    function setupUserMenu() {
+      const trigger = document.getElementById('userMenuTrigger');
+      const dropdown = document.getElementById('userDropdown');
+      const menu = document.getElementById('userMenu');
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+        menu.classList.toggle('open');
+      });
+
+      document.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        menu.classList.remove('open');
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', () => Auth.logout());
+    }
+
+    // Toast
+    function showToast(message, type = '') {
+      let toast = document.querySelector('.toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.className = `toast ${type}`;
+      void toast.offsetWidth;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    document.addEventListener('DOMContentLoaded', initCreatePage);
+  </script>
+</body>
+</html>

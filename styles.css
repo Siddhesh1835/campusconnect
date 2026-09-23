@@ -1,0 +1,2170 @@
+/* ============================================
+   Campus Connect — Reddit Dark Theme
+   ============================================ */
+
+/* --- Google Font --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* --- CSS Custom Properties --- */
+:root {
+  /* Reddit Dark Theme Colors */
+  --bg-canvas: #030303;
+  --bg-body: #1a1a1b;
+  --bg-card: #1a1a1b;
+  --bg-card-hover: #222223;
+  --bg-header: #1a1a1b;
+  --bg-sidebar: #1a1a1b;
+  --bg-input: #272729;
+  --bg-input-focus: #2a2a2c;
+  --bg-hover: #2a2a2c;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --bg-modal: #1a1a1b;
+  --bg-tooltip: #333;
+
+  /* Text Colors */
+  --text-primary: #d7dadc;
+  --text-secondary: #818384;
+  --text-tertiary: #6a6c6e;
+  --text-link: #4fbcff;
+  --text-brand: #FF4500;
+  --text-white: #ffffff;
+  --text-heading: #d7dadc;
+
+  /* Border Colors */
+  --border-default: #343536;
+  --border-light: #2d2d2e;
+  --border-hover: #4a4a4c;
+  --border-focus: #d7dadc;
+
+  /* Brand Colors */
+  --reddit-orange: #FF4500;
+  --reddit-orange-hover: #ff5722;
+  --reddit-blue: #0079D3;
+  --reddit-blue-hover: #1e90ff;
+
+  /* Vote Colors */
+  --upvote: #FF4500;
+  --upvote-hover: #ff5722;
+  --downvote: #7193FF;
+  --downvote-hover: #5a7bff;
+  --vote-inactive: #818384;
+
+  /* Status Colors */
+  --success: #46d160;
+  --warning: #ffd600;
+  --error: #ff4444;
+  --info: #4fbcff;
+
+  /* Shadows */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-dropdown: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-header: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+
+  /* Radius */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --header-height: 48px;
+  --sidebar-width: 270px;
+  --right-panel-width: 312px;
+  --feed-max-width: 640px;
+  --page-max-width: 1280px;
+
+  /* Transitions */
+  --transition-fast: 100ms ease;
+  --transition-base: 200ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+input, textarea, select {
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ============================================
+   HEADER / TOP NAV
+   ============================================ */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-xl);
+  z-index: 100;
+  gap: var(--space-lg);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text-white);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.header-logo:hover {
+  opacity: 0.85;
+}
+
+.header-logo svg {
+  width: 32px;
+  height: 32px;
+}
+
+.header-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--reddit-orange);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.header-search {
+  flex: 1;
+  max-width: 580px;
+  position: relative;
+}
+
+.header-search-input {
+  width: 100%;
+  height: 36px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: 0 var(--space-lg) 0 40px;
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.header-search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.header-search-input:focus {
+  border-color: var(--border-focus);
+  background: var(--bg-input-focus);
+}
+
+.header-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.header-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.header-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* User Menu */
+.user-menu {
+  position: relative;
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: border-color var(--transition-fast);
+  cursor: pointer;
+  background: none;
+}
+
+.user-menu-trigger:hover {
+  border-color: var(--border-default);
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  overflow: hidden;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-menu-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-menu-role {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.user-menu-caret {
+  color: var(--text-secondary);
+  transition: transform var(--transition-fast);
+}
+
+.user-menu.open .user-menu-caret {
+  transform: rotate(180deg);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 200px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.user-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  transition: background var(--transition-fast);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.user-dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.user-dropdown-item svg {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: var(--border-default);
+  margin: var(--space-xs) 0;
+}
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+.page-layout {
+  display: flex;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding-top: var(--header-height);
+  min-height: 100vh;
+  gap: var(--space-2xl);
+  padding-left: var(--space-2xl);
+  padding-right: var(--space-2xl);
+}
+
+/* ============================================
+   LEFT SIDEBAR
+   ============================================ */
+.left-sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  padding: var(--space-lg) 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.left-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.left-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+/* Sidebar Nav Links */
+.sidebar-nav-section {
+  margin-bottom: var(--space-xl);
+}
+
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sidebar-nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--reddit-orange);
+  transform: scaleY(0);
+  transition: transform var(--transition-smooth);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.sidebar-nav-link:hover {
+  background: var(--bg-hover);
+}
+
+.sidebar-nav-link:hover::before {
+  transform: scaleY(1);
+}
+
+.sidebar-nav-link:active {
+  transform: scale(0.98);
+}
+
+.sidebar-nav-link.active {
+  background: rgba(255, 69, 0, 0.08);
+  color: var(--reddit-orange);
+}
+
+.sidebar-nav-link.active::before {
+  transform: scaleY(1);
+}
+
+.sidebar-nav-link svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.sidebar-nav-link:hover svg {
+  transform: scale(1.1);
+}
+
+.sidebar-nav-link .nav-label {
+  flex: 1;
+}
+
+/* Post button special style */
+.sidebar-nav-link.post-btn {
+  color: var(--text-primary);
+}
+
+.sidebar-nav-link.post-btn .plus-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.sidebar-nav-link.post-btn:hover .plus-icon {
+  background: var(--reddit-orange);
+  color: white;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Sidebar Divider */
+.sidebar-divider {
+  height: 1px;
+  background: var(--border-default);
+  margin: var(--space-md) var(--space-lg);
+}
+
+/* Sidebar Section Title */
+.sidebar-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  padding: var(--space-md) var(--space-lg) var(--space-sm);
+}
+
+/* Community List */
+.sidebar-community {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  transition: background var(--transition-fast);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sidebar-community:hover {
+  background: var(--bg-hover);
+}
+
+.sidebar-community-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--reddit-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.sidebar-community-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* ============================================
+   MAIN FEED
+   ============================================ */
+.main-feed {
+  flex: 1;
+  max-width: var(--feed-max-width);
+  min-width: 0;
+  padding: var(--space-lg) 0;
+}
+
+/* Feed Sort Bar */
+.feed-sort-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sort-btn:hover {
+  background: var(--bg-hover);
+}
+
+.sort-btn.active {
+  background: rgba(255, 69, 0, 0.08);
+  color: var(--text-primary);
+}
+
+.sort-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================
+   POST CARD
+   ============================================ */
+.post-card {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-md);
+  transition: border-color var(--transition-fast);
+  cursor: pointer;
+  animation: postFadeIn 0.3s ease both;
+}
+
+.post-card:hover {
+  border-color: var(--border-hover);
+}
+
+@keyframes postFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Vote Column */
+.vote-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-md) var(--space-sm);
+  background: rgba(0, 0, 0, 0.1);
+  width: 40px;
+  flex-shrink: 0;
+  gap: 2px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.vote-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xs);
+  color: var(--vote-inactive);
+  transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.vote-btn:hover {
+  background: var(--bg-hover);
+}
+
+.vote-btn:active {
+  transform: scale(0.85);
+}
+
+.vote-btn.upvote.active {
+  color: var(--upvote);
+}
+
+.vote-btn.downvote.active {
+  color: var(--downvote);
+}
+
+.vote-btn.upvote:hover {
+  color: var(--upvote-hover);
+}
+
+.vote-btn.downvote:hover {
+  color: var(--downvote-hover);
+}
+
+.vote-score {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 20px;
+  text-align: center;
+}
+
+.vote-score.upvoted {
+  color: var(--upvote);
+}
+
+.vote-score.downvoted {
+  color: var(--downvote);
+}
+
+/* Post Content */
+.post-content {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-md) var(--space-md) var(--space-sm);
+}
+
+/* Post Meta */
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.78rem;
+  margin-bottom: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.post-community {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.post-community:hover {
+  text-decoration: underline;
+}
+
+.post-community-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+.post-author {
+  color: var(--text-secondary);
+}
+
+.post-author:hover {
+  text-decoration: underline;
+  color: var(--text-link);
+}
+
+.post-time {
+  color: var(--text-tertiary);
+}
+
+.post-meta-dot {
+  color: var(--text-tertiary);
+  font-size: 0.5rem;
+}
+
+/* Post Title */
+.post-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: var(--space-sm);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.post-title:hover {
+  color: var(--text-link);
+}
+
+/* Post Body */
+.post-body {
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: var(--space-md);
+}
+
+.post-body.truncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Post Actions Bar */
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.post-action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-xs);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.post-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.post-action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Type Badge */
+.post-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.post-type-badge.poll {
+  background: rgba(0, 121, 211, 0.15);
+  color: var(--reddit-blue);
+}
+
+.post-type-badge.test {
+  background: rgba(70, 209, 96, 0.15);
+  color: var(--success);
+}
+
+/* ============================================
+   POLL STYLES
+   ============================================ */
+.poll-container {
+  margin: var(--space-md) 0;
+}
+
+.poll-question {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  color: var(--text-heading);
+}
+
+.poll-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  overflow: hidden;
+}
+
+.poll-option:hover:not(.voted) {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+}
+
+.poll-option.voted {
+  cursor: default;
+}
+
+.poll-option.selected {
+  border-color: var(--reddit-blue);
+}
+
+.poll-option-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: rgba(0, 121, 211, 0.15);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-sm);
+}
+
+.poll-option-text {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  font-weight: 500;
+}
+
+.poll-option-pct {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-left: var(--space-md);
+}
+
+.poll-total {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+/* ============================================
+   RIGHT SIDEBAR
+   ============================================ */
+.right-sidebar {
+  width: var(--right-panel-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  padding: var(--space-lg) 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.right-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.right-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+/* Info Card */
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+}
+
+.info-card-banner {
+  height: 34px;
+  background: linear-gradient(90deg, var(--reddit-orange), #ff6d00);
+}
+
+.info-card-content {
+  padding: var(--space-lg);
+}
+
+.info-card-title {
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: var(--space-md);
+}
+
+.info-card-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-lg);
+}
+
+.info-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--border-default);
+}
+
+.info-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-stat-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.info-stat-label {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.info-card-actions {
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-default);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-xl);
+  border-radius: var(--radius-full);
+  font-size: 0.93rem;
+  font-weight: 700;
+  transition: background var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: var(--reddit-orange);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--reddit-orange-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--reddit-blue);
+  border: 1px solid var(--reddit-blue);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 121, 211, 0.1);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: var(--space-xs) var(--space-md);
+  font-size: 0.85rem;
+}
+
+.btn-lg {
+  padding: var(--space-md) var(--space-3xl);
+  font-size: 1rem;
+}
+
+/* ============================================
+   LOGIN PAGE
+   ============================================ */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-canvas);
+  padding: var(--space-xl);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4xl);
+  animation: loginSlideUp 0.5s ease both;
+}
+
+@keyframes loginSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+}
+
+.login-logo-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--reddit-orange);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.login-logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.login-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.form-input {
+  width: 100%;
+  height: 42px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-lg);
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.form-input:focus {
+  border-color: var(--border-focus);
+  background: var(--bg-input-focus);
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md) var(--space-lg);
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+  line-height: 1.5;
+}
+
+.form-textarea:focus {
+  border-color: var(--border-focus);
+}
+
+.form-select {
+  width: 100%;
+  height: 42px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-lg);
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23818384' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.form-select:focus {
+  border-color: var(--border-focus);
+}
+
+.form-error {
+  color: var(--error);
+  font-size: 0.85rem;
+  margin-top: var(--space-xs);
+}
+
+.form-hint {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: var(--space-xs);
+}
+
+/* ============================================
+   COMMENT STYLES
+   ============================================ */
+.comments-section {
+  padding: var(--space-lg);
+  border-top: 1px solid var(--border-default);
+}
+
+.comment-input-wrapper {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.comment-input-wrapper .comment-textarea {
+  flex: 1;
+  min-height: 80px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+}
+
+.comment-input-wrapper .comment-textarea:focus {
+  border-color: var(--border-focus);
+}
+
+.comment-thread {
+  margin-bottom: var(--space-md);
+}
+
+.comment {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.comment-line {
+  width: 2px;
+  background: var(--border-default);
+  flex-shrink: 0;
+  margin-left: 11px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.comment-line:hover {
+  background: var(--reddit-blue);
+}
+
+.comment-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.comment-author {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comment-time {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+}
+
+.comment-text {
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: var(--space-sm);
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.comment-action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-xs);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.comment-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.comment-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.comment-action-btn.upvote.active {
+  color: var(--upvote);
+}
+
+.comment-action-btn.downvote.active {
+  color: var(--downvote);
+}
+
+.comment-replies {
+  margin-left: var(--space-lg);
+  border-left: 2px solid var(--border-default);
+  padding-left: var(--space-md);
+}
+
+/* Reply Input */
+.reply-input-wrapper {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.reply-textarea {
+  flex: 1;
+  min-height: 60px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.reply-textarea:focus {
+  border-color: var(--border-focus);
+}
+
+/* ============================================
+   CREATE POST PAGE
+   ============================================ */
+.create-post-container {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: var(--space-2xl) 0;
+}
+
+.create-post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-default);
+  margin-bottom: var(--space-xl);
+}
+
+.create-post-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+/* Tab Switcher */
+.tab-switcher {
+  display: flex;
+  border-bottom: 1px solid var(--border-default);
+  margin-bottom: var(--space-xl);
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--reddit-blue);
+}
+
+.tab-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: tabFadeIn 0.2s ease;
+}
+
+@keyframes tabFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Poll Creator */
+.poll-option-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.poll-option-input input {
+  flex: 1;
+  height: 38px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-md);
+  color: var(--text-primary);
+}
+
+.poll-option-input input:focus {
+  border-color: var(--border-focus);
+}
+
+.poll-option-remove {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.poll-option-remove:hover {
+  background: rgba(255, 68, 68, 0.1);
+  color: var(--error);
+}
+
+.add-option-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.85rem;
+  color: var(--reddit-blue);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.add-option-btn:hover {
+  background: rgba(0, 121, 211, 0.1);
+}
+
+/* ============================================
+   MCQ TEST PAGE
+   ============================================ */
+.test-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-2xl) 0;
+}
+
+.test-header {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+}
+
+.test-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: var(--space-sm);
+}
+
+.test-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.test-info-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-lg);
+  animation: postFadeIn 0.3s ease both;
+}
+
+.question-number {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--reddit-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-sm);
+}
+
+.question-text {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: var(--space-xl);
+  line-height: 1.4;
+}
+
+.question-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.question-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.question-option:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+}
+
+.question-option.selected {
+  border-color: var(--reddit-blue);
+  background: rgba(0, 121, 211, 0.08);
+}
+
+.question-option.correct {
+  border-color: var(--success);
+  background: rgba(70, 209, 96, 0.08);
+}
+
+.question-option.wrong {
+  border-color: var(--error);
+  background: rgba(255, 68, 68, 0.08);
+}
+
+.option-radio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast);
+}
+
+.question-option.selected .option-radio {
+  border-color: var(--reddit-blue);
+}
+
+.question-option.selected .option-radio::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--reddit-blue);
+}
+
+.option-text {
+  font-size: 0.93rem;
+  color: var(--text-primary);
+}
+
+/* Test Score Card */
+.score-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4xl);
+  text-align: center;
+  margin-top: var(--space-xl);
+}
+
+.score-value {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--reddit-orange), #ff6d00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.score-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+/* ============================================
+   SCHEDULE TEST PAGE
+   ============================================ */
+.schedule-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+}
+
+.question-builder {
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  position: relative;
+}
+
+.question-builder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+
+.question-builder-num {
+  font-weight: 700;
+  color: var(--reddit-orange);
+}
+
+.question-builder-remove {
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.question-builder-remove:hover {
+  color: var(--error);
+}
+
+.correct-option-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+}
+
+.correct-option-label input[type="radio"] {
+  accent-color: var(--success);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.correct-option-label.selected {
+  color: var(--success);
+}
+
+/* ============================================
+   TEST LIST
+   ============================================ */
+.test-list-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.test-list-card:hover {
+  border-color: var(--border-hover);
+}
+
+.test-list-info {
+  flex: 1;
+}
+
+.test-list-title {
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.test-list-meta {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.test-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.test-status.active {
+  background: rgba(70, 209, 96, 0.15);
+  color: var(--success);
+}
+
+.test-status.completed {
+  background: rgba(129, 131, 132, 0.15);
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  padding: var(--space-md) var(--space-2xl);
+  border-radius: var(--radius-sm);
+  font-size: 0.93rem;
+  font-weight: 500;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base), transform var(--transition-base);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.toast.success {
+  border-left: 3px solid var(--success);
+}
+
+.toast.error {
+  border-left: 3px solid var(--error);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-lg);
+  opacity: 0.4;
+}
+
+.empty-state-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.empty-state-text {
+  font-size: 0.93rem;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-default);
+  border-top-color: var(--reddit-orange);
+  border-radius: var(--radius-full);
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4xl);
+}
+
+/* ============================================
+   POST DETAIL PAGE
+   ============================================ */
+.post-detail-layout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-2xl);
+  padding-top: calc(var(--header-height) + var(--space-lg));
+}
+
+.post-detail-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+}
+
+.post-detail-content {
+  display: flex;
+}
+
+.post-detail-body {
+  flex: 1;
+  padding: var(--space-lg);
+}
+
+.post-detail-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: var(--space-md);
+  line-height: 1.3;
+}
+
+.post-detail-text {
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============================================
+   BACK LINK
+   ============================================ */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: var(--space-sm) 0;
+  margin-bottom: var(--space-md);
+  transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--text-primary);
+}
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+  .right-sidebar {
+    display: none;
+  }
+
+  .page-layout {
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+}
+
+@media (max-width: 900px) {
+  .left-sidebar {
+    display: none;
+  }
+
+  .page-layout {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  .main-feed {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 13px;
+  }
+
+  .header {
+    padding: 0 var(--space-md);
+  }
+
+  .header-logo-text {
+    display: none;
+  }
+
+  .user-menu-name {
+    display: none;
+  }
+
+  .user-menu-role {
+    display: none;
+  }
+
+  .vote-column {
+    width: 32px;
+    padding: var(--space-sm) var(--space-xs);
+  }
+
+  .post-detail-layout {
+    padding: var(--space-sm);
+    padding-top: calc(var(--header-height) + var(--space-sm));
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.hidden {
+  display: none !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+.mt-xl { margin-top: var(--space-xl); }
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.mb-xl { margin-bottom: var(--space-xl); }
+
+/* ============================================
+   PROFILE & DASHBOARD STYLES
+   ============================================ */
+
+/* Profile Header */
+.profile-header {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.profile-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background: var(--reddit-blue);
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.profile-info h1 {
+  font-size: 1.5rem;
+  color: var(--text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.profile-role-badge {
+  display: inline-block;
+  background: rgba(0, 121, 211, 0.15);
+  color: var(--text-link);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: var(--space-sm);
+}
+
+/* Dashboard Cards */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.stat-card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.stat-card-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Dashboard Table */
+.dashboard-table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  box-shadow: var(--shadow-card);
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: var(--space-md) var(--space-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.dashboard-table th {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.dashboard-table td {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.dashboard-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.score-badge.high {
+  background: rgba(70, 209, 96, 0.15);
+  color: var(--success);
+}
+.score-badge.medium {
+  background: rgba(255, 214, 0, 0.15);
+  color: var(--warning);
+}
+.score-badge.low {
+  background: rgba(255, 68, 68, 0.15);
+  color: var(--error);
+}
+
+.test-row {
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.test-row:hover {
+  background: var(--bg-hover) !important;
+}

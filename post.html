@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Campus Connect — Post details and discussion thread." />
+  <meta name="theme-color" content="#1a1a1b" />
+  <title>Campus Connect — Post</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============== HEADER ============== -->
+  <header class="header" id="header">
+    <a href="home.html" class="header-logo">
+      <div class="header-logo-icon">🎓</div>
+      <span class="header-logo-text">Campus Connect</span>
+    </a>
+    <div class="header-search">
+      <svg class="header-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="header-search-input" placeholder="Search Campus Connect" />
+    </div>
+    <div class="header-actions">
+      <div class="user-menu" id="userMenu">
+        <button class="user-menu-trigger" id="userMenuTrigger">
+          <div class="user-avatar">👤</div>
+          <span class="user-menu-name" id="userName">User</span>
+          <svg class="user-menu-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <button class="user-dropdown-item" onclick="window.location.href='home.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </button>
+          <button class="user-dropdown-item" id="viewProfile" onclick="window.location.href='profile.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            View Profile
+          </button>
+          <button class="user-dropdown-item" onclick="window.location.href='dashboard.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Dashboard
+          </button>
+          <div class="user-dropdown-divider"></div>
+          <button class="user-dropdown-item" id="logoutBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============== POST DETAIL ============== -->
+  <div class="post-detail-layout">
+    <a href="home.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to feed
+    </a>
+
+    <div class="post-detail-card" id="postDetail">
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // ===== POST DETAIL PAGE LOGIC =====
+    let currentUser = null;
+    let currentPost = null;
+
+    // Parse post ID from URL
+    function getPostId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    // Initialize page
+    async function initPostPage() {
+      const session = await Auth.requireAuth();
+      if (!session) return;
+
+      currentUser = await Auth.getProfile();
+      if (currentUser) {
+        document.getElementById('userName').textContent = currentUser.full_name;
+      }
+
+      // Setup user menu
+      setupUserMenu();
+
+      const postId = getPostId();
+      if (!postId) {
+        document.getElementById('postDetail').innerHTML = '<div class="empty-state"><div class="empty-state-title">Post not found</div></div>';
+        return;
+      }
+
+      await loadPost(postId);
+    }
+
+    // Load post
+    async function loadPost(postId) {
+      const { data: post, error } = await supabase
+        .from('posts')
+        .select(`
+          *,
+          profiles:author_id (id, full_name, role),
+          communities:community_id (id, name, icon_emoji, banner_color)
+        `)
+        .eq('id', postId)
+        .single();
+
+      if (error || !post) {
+        document.getElementById('postDetail').innerHTML = '<div class="empty-state"><div class="empty-state-title">Post not found</div><p class="empty-state-text">This post may have been deleted.</p></div>';
+        return;
+      }
+
+      currentPost = post;
+      document.title = `${post.title} — Campus Connect`;
+
+      // Get user's vote
+      const { data: userVote } = await supabase
+        .from('post_votes')
+        .select('vote_type')
+        .eq('post_id', postId)
+        .eq('user_id', currentUser.id)
+        .single();
+
+      // Get poll data if poll
+      let pollOptions = [];
+      let userPollVote = null;
+      if (post.type === 'poll') {
+        const { data: options } = await supabase
+          .from('poll_options')
+          .select('*')
+          .eq('post_id', postId)
+          .order('option_index');
+        pollOptions = options || [];
+
+        const { data: pv } = await supabase
+          .from('poll_votes')
+          .select('option_id')
+          .eq('post_id', postId)
+          .eq('user_id', currentUser.id)
+          .single();
+        userPollVote = pv;
+      }
+
+      // Get comments
+      const { data: comments } = await supabase
+        .from('comments')
+        .select(`
+          *,
+          profiles:author_id (id, full_name, role)
+        `)
+        .eq('post_id', postId)
+        .order('created_at', { ascending: true });
+
+      // Get user's comment votes
+      const commentIds = (comments || []).map(c => c.id);
+      let commentVotes = [];
+      if (commentIds.length > 0) {
+        const { data: cv } = await supabase
+          .from('comment_votes')
+          .select('comment_id, vote_type')
+          .eq('user_id', currentUser.id)
+          .in('comment_id', commentIds);
+        commentVotes = cv || [];
+      }
+
+      renderPostDetail(post, userVote, pollOptions, userPollVote, comments || [], commentVotes);
+    }
+
+    // Render post detail
+    function renderPostDetail(post, userVote, pollOptions, userPollVote, comments, commentVotes) {
+      const voteType = userVote?.vote_type || 0;
+      const upActive = voteType === 1 ? 'active' : '';
+      const downActive = voteType === -1 ? 'active' : '';
+      const scoreClass = voteType === 1 ? 'upvoted' : voteType === -1 ? 'downvoted' : '';
+
+      let bodyHTML = '';
+      if (post.type === 'text') {
+        bodyHTML = `<div class="post-detail-text">${escapeHTML(post.content || '')}</div>`;
+      } else if (post.type === 'poll') {
+        bodyHTML = renderPollDetail(post, pollOptions, userPollVote);
+      }
+
+      // Build comment tree
+      const commentTree = buildCommentTree(comments);
+      const commentsHTML = commentTree.map(c => renderComment(c, commentVotes)).join('');
+
+      document.getElementById('postDetail').innerHTML = `
+        <div class="post-detail-content">
+          <div class="vote-column">
+            <button class="vote-btn upvote ${upActive}" data-post-id="${post.id}" data-vote="1" onclick="handlePostVote('${post.id}', 1)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+            </button>
+            <span class="vote-score ${scoreClass}" id="score-${post.id}">${post.score}</span>
+            <button class="vote-btn downvote ${downActive}" data-post-id="${post.id}" data-vote="-1" onclick="handlePostVote('${post.id}', -1)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20l8-8h-5V4H9v8H4z"/></svg>
+            </button>
+          </div>
+          <div class="post-detail-body">
+            <div class="post-meta">
+              <span class="post-community" style="cursor:default;">
+                <span class="post-community-icon" style="background:${post.communities.banner_color}">${post.communities.icon_emoji}</span>
+                c/${post.communities.name.replace(/\s+/g, '_')}
+              </span>
+              <span class="post-meta-dot">•</span>
+              <span class="post-author">Posted by u/${post.profiles.full_name}</span>
+              <span class="post-meta-dot">•</span>
+              <span class="post-time">${Auth.timeAgo(post.created_at)}</span>
+              ${post.type === 'poll' ? '<span class="post-type-badge poll">📊 Poll</span>' : ''}
+            </div>
+            <h1 class="post-detail-title">${escapeHTML(post.title)}</h1>
+            ${bodyHTML}
+            <div class="post-actions">
+              <span class="post-action-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                ${post.comment_count} Comments
+              </span>
+              <button class="post-action-btn" onclick="sharePost()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="comments-section">
+          <div class="comment-input-wrapper">
+            <textarea class="comment-textarea" id="commentInput" placeholder="What are your thoughts?"></textarea>
+            <button class="btn btn-primary btn-sm" onclick="submitComment('${post.id}')" style="align-self:flex-end;">Comment</button>
+          </div>
+          <div id="commentsContainer">
+            ${commentsHTML || '<div class="empty-state"><div class="empty-state-text">No comments yet. Be the first to comment!</div></div>'}
+          </div>
+        </div>
+      `;
+    }
+
+    // Render poll detail
+    function renderPollDetail(post, options, userVote) {
+      const totalVotes = options.reduce((sum, o) => sum + o.vote_count, 0);
+      const hasVoted = !!userVote;
+
+      const optionsHTML = options.map(opt => {
+        const pct = totalVotes > 0 ? Math.round((opt.vote_count / totalVotes) * 100) : 0;
+        const isSelected = userVote?.option_id === opt.id;
+        return `
+          <div class="poll-option ${hasVoted ? 'voted' : ''} ${isSelected ? 'selected' : ''}" 
+               data-option-id="${opt.id}" data-post-id="${post.id}"
+               onclick="${hasVoted ? '' : `votePoll('${post.id}', '${opt.id}')`}">
+            <div class="poll-option-bar" style="width:${hasVoted ? pct : 0}%"></div>
+            <span class="poll-option-text">${escapeHTML(opt.option_text)}</span>
+            ${hasVoted ? `<span class="poll-option-pct">${pct}%</span>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="poll-container">
+          ${optionsHTML}
+          <div class="poll-total">${totalVotes} votes</div>
+        </div>
+      `;
+    }
+
+    // Build comment tree
+    function buildCommentTree(comments) {
+      const map = {};
+      const roots = [];
+      comments.forEach(c => { map[c.id] = { ...c, children: [] }; });
+      comments.forEach(c => {
+        if (c.parent_id && map[c.parent_id]) {
+          map[c.parent_id].children.push(map[c.id]);
+        } else {
+          roots.push(map[c.id]);
+        }
+      });
+      return roots;
+    }
+
+    // Render comment
+    function renderComment(comment, commentVotes, depth = 0) {
+      const cv = commentVotes.find(v => v.comment_id === comment.id);
+      const voteType = cv?.vote_type || 0;
+      const upActive = voteType === 1 ? 'active' : '';
+      const downActive = voteType === -1 ? 'active' : '';
+
+      const childrenHTML = comment.children.map(c => renderComment(c, commentVotes, depth + 1)).join('');
+      const authorName = comment.profiles?.full_name || 'Unknown';
+      const roleLabel = comment.profiles?.role === 'teacher' ? ' 🧑‍🏫' : '';
+
+      return `
+        <div class="comment-thread" style="margin-left:${depth > 0 ? '20px' : '0'}">
+          <div class="comment">
+            <div class="comment-avatar">${authorName.charAt(0).toUpperCase()}</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-author">${escapeHTML(authorName)}${roleLabel}</span>
+                <span class="comment-time">${Auth.timeAgo(comment.created_at)}</span>
+              </div>
+              <div class="comment-text">${escapeHTML(comment.content)}</div>
+              <div class="comment-actions">
+                <button class="comment-action-btn upvote ${upActive}" onclick="handleCommentVote('${comment.id}', 1)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+                </button>
+                <span style="font-size:0.78rem;font-weight:700;color:var(--text-primary);min-width:16px;text-align:center;" id="cscore-${comment.id}">${comment.score}</span>
+                <button class="comment-action-btn downvote ${downActive}" onclick="handleCommentVote('${comment.id}', -1)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20l8-8h-5V4H9v8H4z"/></svg>
+                </button>
+                <button class="comment-action-btn" onclick="toggleReply('${comment.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Reply
+                </button>
+              </div>
+              <div class="reply-input-wrapper hidden" id="reply-${comment.id}">
+                <textarea class="reply-textarea" id="replyInput-${comment.id}" placeholder="Write a reply..."></textarea>
+                <div style="display:flex;gap:var(--space-sm);align-self:flex-end;">
+                  <button class="btn btn-ghost btn-sm" onclick="toggleReply('${comment.id}')">Cancel</button>
+                  <button class="btn btn-primary btn-sm" onclick="submitReply('${currentPost.id}', '${comment.id}')">Reply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${childrenHTML}
+        </div>
+      `;
+    }
+
+    // Handle post vote
+    async function handlePostVote(postId, voteType) {
+      const { data: existing } = await supabase
+        .from('post_votes')
+        .select('*')
+        .eq('post_id', postId)
+        .eq('user_id', currentUser.id)
+        .single();
+
+      if (existing) {
+        if (existing.vote_type === voteType) {
+          // Remove vote
+          await supabase.from('post_votes').delete().eq('id', existing.id);
+        } else {
+          // Change vote
+          await supabase.from('post_votes').update({ vote_type: voteType }).eq('id', existing.id);
+        }
+      } else {
+        // New vote
+        await supabase.from('post_votes').insert({ post_id: postId, user_id: currentUser.id, vote_type: voteType });
+      }
+
+      // Reload post
+      await loadPost(postId);
+    }
+
+    // Handle comment vote
+    async function handleCommentVote(commentId, voteType) {
+      const { data: existing } = await supabase
+        .from('comment_votes')
+        .select('*')
+        .eq('comment_id', commentId)
+        .eq('user_id', currentUser.id)
+        .single();
+
+      if (existing) {
+        if (existing.vote_type === voteType) {
+          await supabase.from('comment_votes').delete().eq('id', existing.id);
+        } else {
+          await supabase.from('comment_votes').update({ vote_type: voteType }).eq('id', existing.id);
+        }
+      } else {
+        await supabase.from('comment_votes').insert({ comment_id: commentId, user_id: currentUser.id, vote_type: voteType });
+      }
+
+      await loadPost(getPostId());
+    }
+
+    // Submit comment
+    async function submitComment(postId) {
+      const input = document.getElementById('commentInput');
+      const content = input.value.trim();
+      if (!content) return;
+
+      const { error } = await supabase.from('comments').insert({
+        post_id: postId,
+        author_id: currentUser.id,
+        content: content
+      });
+
+      if (error) {
+        showToast('Failed to post comment', 'error');
+        return;
+      }
+
+      input.value = '';
+      await loadPost(postId);
+      showToast('Comment posted!', 'success');
+    }
+
+    // Toggle reply input
+    function toggleReply(commentId) {
+      const el = document.getElementById(`reply-${commentId}`);
+      el.classList.toggle('hidden');
+      if (!el.classList.contains('hidden')) {
+        document.getElementById(`replyInput-${commentId}`).focus();
+      }
+    }
+
+    // Submit reply
+    async function submitReply(postId, parentId) {
+      const input = document.getElementById(`replyInput-${parentId}`);
+      const content = input.value.trim();
+      if (!content) return;
+
+      const { error } = await supabase.from('comments').insert({
+        post_id: postId,
+        parent_id: parentId,
+        author_id: currentUser.id,
+        content: content
+      });
+
+      if (error) {
+        showToast('Failed to post reply', 'error');
+        return;
+      }
+
+      await loadPost(postId);
+      showToast('Reply posted!', 'success');
+    }
+
+    // Vote poll
+    async function votePoll(postId, optionId) {
+      const { error: voteError } = await supabase.from('poll_votes').insert({
+        post_id: postId,
+        option_id: optionId,
+        user_id: currentUser.id
+      });
+
+      if (!voteError) {
+        // Increment vote count
+        const { data: opt } = await supabase.from('poll_options').select('vote_count').eq('id', optionId).single();
+        await supabase.from('poll_options').update({ vote_count: (opt?.vote_count || 0) + 1 }).eq('id', optionId);
+      }
+
+      await loadPost(postId);
+    }
+
+    // Share post
+    function sharePost() {
+      navigator.clipboard.writeText(window.location.href);
+      showToast('Link copied to clipboard!', 'success');
+    }
+
+    // Escape HTML
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // User menu
+    function setupUserMenu() {
+      const trigger = document.getElementById('userMenuTrigger');
+      const dropdown = document.getElementById('userDropdown');
+      const menu = document.getElementById('userMenu');
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+        menu.classList.toggle('open');
+      });
+
+      document.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        menu.classList.remove('open');
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', () => Auth.logout());
+    }
+
+    // Toast
+    function showToast(message, type = '') {
+      let toast = document.querySelector('.toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.className = `toast ${type}`;
+      void toast.offsetWidth;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', initPostPage);
+  </script>
+</body>
+</html>
